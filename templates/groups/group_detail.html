@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="neon-text">{{ group.name }}</h2>
+<p>{{ group.description }}</p>
+
+<p>Учасників: {{ group.members.count }}</p>
+
+{% if is_member %}
+
+<a href="{% url 'leave_group' group.slug %}" class="btn btn-danger mb-3">
+    Вийти
+</a>
+{% if request.user == group.creator %}
+    <form method="post" action="{% url 'delete_group' group.slug %}">
+        {% csrf_token %}
+        <button class="btn btn-danger mt-3">
+            Видалити групу
+        </button>
+    </form>
+{% endif %}
+
+<!-- ЧАТ -->
+
+<div class="chat-box mb-3 p-3">
+    {% for message in messages %}
+        <div class="mb-2">
+            <strong>{{ message.author.username }}</strong>
+            <small class="text-muted">
+                {{ message.created_at|date:"H:i" }}
+            </small>
+
+            <div>{{ message.content }}</div>
+        </div>
+    {% empty %}
+        <p class="text-muted">Немає повідомлень</p>
+    {% endfor %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="input-group">
+        <input
+            type="text"
+            name="content"
+            class="form-control"
+            placeholder="Напишіть повідомлення..."
+            required>
+
+        <button name="send_message" class="btn btn-primary">
+            Надіслати
+        </button>
+    </div>
+</form>
+
+{% else %}
+
+<div class="glass p-4 text-center">
+    <p>Ви не є учасником цієї групи</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button name="join_group" class="btn btn-success">
+            Приєднатись
+        </button>
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

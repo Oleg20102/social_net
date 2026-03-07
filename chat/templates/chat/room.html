@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Чат з @{{ other_user.username }}{% endblock %}
+
+{% block content %}
+<div class="chat-wrap">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Чат з <span class="text-info">@{{ other_user.username }}</span></h3>
+  </div>
+
+  <div id="chat-box" class="chat-box">
+    {% for m in messages %}
+      {% if m.sender == request.user %}
+        <div class="chat-msg me">
+          <div class="chat-bubble">
+            <div class="chat-meta">@{{ m.sender.username }}</div>
+            {{ m.text }}
+          </div>
+        </div>
+      {% else %}
+        <div class="chat-msg other">
+          <div class="chat-bubble">
+            <div class="chat-meta">@{{ m.sender.username }}</div>
+            {{ m.text }}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <form id="chat-form" class="chat-input-row">
+    <input id="chat-input" class="form-control chat-input" placeholder="Напиши повідомлення..." autocomplete="off">
+    <button class="btn btn-info fw-semibold" type="submit">Надіслати</button>
+  </form>
+
+</div>
+
+<script>
+  const otherUsername = "{{ other_user.username }}";
+  const wsUrl = `ws://${window.location.host}/ws/chat/${otherUsername}/`;
+  const socket = new WebSocket(wsUrl);
+
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("chat-input");
+  const box = document.getElementById("chat-box");
+
+  function scrollDown() {
+    box.scrollTop = box.scrollHeight;
+  }
+  scrollDown();
+
+  socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+
+    const wrap = document.createElement("div");
+    const isMe = data.sender === "{{ request.user.username }}";
+    wrap.className = "chat-msg " + (isMe ? "me" : "other");
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+    bubble.innerHTML = `<div class="chat-meta">@${data.sender}</div>${data.text}`;
+
+    wrap.appendChild(bubble);
+    box.appendChild(wrap);
+    scrollDown();
+  };
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    socket.send(JSON.stringify({text}));
+    input.value = "";
+  });
+</script>
+{% endblock %}

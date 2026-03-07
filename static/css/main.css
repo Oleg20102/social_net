@@ -1,0 +1,147 @@
+/* =========================
+   GLOBAL (фон + layout)
+========================= */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body.app-bg {
+  min-height: 100vh;
+  background: #0f172a !important;
+  color: #fff !important;
+
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  background: transparent !important;
+}
+
+/* bootstrap контейнери не повинні фарбувати фон */
+.container, .container-fluid {
+  background: transparent !important;
+}
+
+/* =========================
+   LINKS + NAVBAR
+========================= */
+a {
+  color: #38bdf8 !important;
+  font-size: 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+.navbar .nav-link:hover {
+  opacity: 0.85;
+}
+
+/* =========================
+   BOOTSTRAP "WHITE" FIX
+========================= */
+.card, .list-group-item, .list-group {
+  background: rgba(255,255,255,0.06) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* =========================
+   CHAT UI
+========================= */
+.chat-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.chat-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 16px;
+  height: 420px;
+  overflow-y: auto;
+}
+
+.chat-msg {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.chat-msg.me {
+  justify-content: flex-end;
+}
+
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  line-height: 1.25;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.chat-msg.me .chat-bubble {
+  background: rgba(13, 202, 240, 0.20);
+  border: 1px solid rgba(13, 202, 240, 0.35);
+}
+
+.chat-msg.other .chat-bubble {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.chat-meta {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.chat-input-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.chat-input:focus {
+  box-shadow: none;
+  border-color: rgba(13, 202, 240, 0.5);
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+/* ===== INBOX (список чатів) FIX ===== */
+.list-group-item,
+.list-group-item-action{
+  background: rgba(255,255,255,0.06) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus{
+  background: rgba(255,255,255,0.10) !important;
+  color: #fff !important;
+}
+
+/* якщо кнопка активна/вибрана */
+.list-group-item.active{
+  background: rgba(13, 202, 240, 0.20) !important;
+  border-color: rgba(13, 202, 240, 0.35) !important;
+  color: #fff !important;
+}
+
+/* muted на темному робимо читабельним */
+.text-muted{
+  color: rgba(255,255,255,0.65) !important;
+}

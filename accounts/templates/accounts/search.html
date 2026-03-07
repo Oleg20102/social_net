@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Пошук{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">Пошук користувачів</h3>
+
+<form method="get" class="d-flex gap-2 mb-4">
+  <input name="q" value="{{ q }}" class="form-control" placeholder="Напр. Zonyxxx або Test">
+  <button class="btn-future" type="submit">Шукати</button>
+</form>
+
+{% if q and not results %}
+  <p class="text-muted">Нічого не знайдено 😕</p>
+{% endif %}
+
+<div class="list-group">
+  {% for u in results %}
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>@{{ u.username }}</strong>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'profile' u.username %}">Профіль</a>
+        <a class="btn btn-sm btn-success" href="{% url 'chat_room' u.username %}">Написати</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

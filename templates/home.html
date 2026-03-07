@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Стрічка{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Привіт, {{ request.user.username }}👋 Вітаємо на Social</h2>
+
+<div class="mb-4 d-flex gap-2">
+    <a href="{% url 'profile' request.user.username %}" class="btn-future">Мій профіль</a>
+    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Вийти</a>
+</div>
+
+<div class="glass p-4 mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Новий пост</h5>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.text }}
+      <button class="btn btn-success mt-2" type="submit">Опублікувати</button>
+    </form>
+  </div>
+</div>
+
+<h4 class="mb-3">Стрічка</h4>
+
+{% for post in posts %}
+  <div class="post-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>@{{ post.author.username }}</strong>
+          <small class="text-muted ms-2">{{ post.created_at|date:"d.m.Y H:i" }}</small>
+        </div>
+
+        {% if post.author == request.user %}
+          <form method="post" action="{% url 'delete_post' post.id %}" class="m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Видалити
+            </button>
+          </form>
+        {% endif %}
+      </div>
+
+      <p class="mt-2 mb-2">{{ post.text }}</p>
+
+<div class="d-flex gap-2 align-items-center mt-2">
+
+  <!-- ЛАЙК -->
+  <form method="post" action="{% url 'toggle_like' post.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-outline-primary">
+      {% if request.user in post.likes.all %}
+        💙 Лайкнуто
+      {% else %}
+        🤍 Лайк
+      {% endif %}
+      ({{ post.likes.count }})
+    </button>
+  </form>
+
+</div>
+
+    </div>
+  </div>
+{% empty %}
+  <p class="text-muted">Постів ще немає. Напиши перший 🙂</p>
+{% endfor %}
+
+{% endblock %}
